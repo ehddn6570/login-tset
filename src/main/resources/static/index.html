@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script>
+        async function login(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const studentId = document.getElementById("studentId").value;
+            const password = document.getElementById("password").value;
+
+            const response = await fetch("/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    studentId: studentId,
+                    password: password
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("accessToken", data.accessToken);
+                localStorage.setItem("refreshToken", data.refreshToken);
+                alert("Login successful!");
+                window.location.href = "/members.html";
+            } else {
+                alert("Login failed: " + (await response.text()));
+            }
+        }
+    </script></head><body>
+<h1>Login</h1>
+<form onsubmit="login(event)">
+    <label for="studentId">Student ID:</label>
+    <input type="text" id="studentId" name="studentId" required>
+    <br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br><br>
+    <button type="submit">Login</button>
+</form></body></html
